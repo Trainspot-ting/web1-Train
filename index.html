@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的个人主页</title>
+<style>
+/* ========================================
+   颜色与样式配置区（方便修改）
+   ======================================== */
+:root {
+  --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f4f4f4 100%);  /* 背景渐变（白→浅灰） */
+  --card-bg: rgba(255, 255, 255, 0.92);                              /* 卡片背景 */
+  --text-primary: #1a1a1a;                                           /* 主文字色（近黑） */
+  --text-secondary: #9a9a9a;                                         /* 次文字色（中灰） */
+  --accent-color: #1a1a1a;                                           /* 主色调（黑） */
+  --accent-light: #eeeeee;                                            /* 浅色调 */
+  --timeline-line: #d8d8d8;                                           /* 时间线颜色（浅灰） */
+  --avatar-border: #ffffff;                                          /* 头像边框色 */
+  --font-main: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========================================
+   基础样式
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 屏幕容器 */
+.screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+/* ========================================
+   第一屏：关于我
+   ======================================== */
+.profile-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 30px;
+  padding: 50px 40px;
+  max-width: 540px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* 圆形头像 */
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid var(--avatar-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  margin: 0 auto 24px;
+  display: block;
+}
+
+.nickname {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.intro {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-style: italic;
+}
+
+.info-block {
+  text-align: left;
+  margin-top: 24px;
+}
+
+.info-block h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-color);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-block h3::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  background: var(--accent-color);
+  border-radius: 2px;
+}
+
+.info-block p {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 2;
+  padding-left: 12px;
+}
+
+/* 向下提示箭头 */
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ========================================
+   第二屏：我的学习记录（时间线）
+   ======================================== */
+.timeline-section {
+  flex-direction: column;
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.timeline-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.timeline-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.timeline {
+  position: relative;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 时间线竖线 */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--timeline-line);
+  opacity: 0.4;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 40px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 节点圆点 */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.timeline-content {
+  position: relative;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-content:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-date {
+  font-size: 12px;
+  color: var(--accent-color);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.timeline-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.timeline-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ========================================
+   编辑功能样式
+   ======================================== */
+/* 可编辑元素 */
+[contenteditable="true"] {
+  outline: none;
+  border-radius: 6px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  padding: 2px 8px;
+  margin: -2px -8px;
+  cursor: text;
+  word-break: break-word;
+}
+
+[contenteditable="true"]:hover {
+  background: rgba(0, 0, 0, 0.03);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+[contenteditable="true"]:focus {
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/* 空内容占位提示 */
+[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: #c0c0c0;
+  font-style: italic;
+}
+
+/* 删除按钮 */
+.btn-delete {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #b0b0b0;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.25s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.timeline-item:hover .btn-delete {
+  opacity: 1;
+}
+
+.btn-delete:hover {
+  background: #1a1a1a;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* 新增记录按钮 */
+.btn-add {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 32px;
+  border: 2px dashed var(--accent-color);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--accent-color);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: all 0.3s ease;
+}
+
+.btn-add:hover {
+  background: var(--accent-color);
+  color: #fff;
+  transform: translateY(-2px);
+  border-style: solid;
+}
+
+/* 编辑提示文字 */
+.edit-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 20px;
+  opacity: 0.6;
+}
+
+/* 新记录淡入动画 */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.timeline-item.is-new {
+  animation: fadeInUp 0.4s ease;
+}
+
+/* ========================================
+   响应式适配
+   ======================================== */
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 40px 24px;
+    border-radius: 24px;
+  }
+
+  .avatar {
+    width: 110px;
+    height: 110px;
+  }
+
+  .nickname {
+    font-size: 24px;
+  }
+
+  .timeline-header h2 {
+    font-size: 26px;
+  }
+
+  .timeline-content {
+    padding: 20px;
+  }
+
+  .timeline-item {
+    padding-left: 50px;
+  }
+
+  /* 移动端常显删除按钮 */
+  .btn-delete {
+    opacity: 1;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ========================================
+     第一屏：关于我
+     ======================================== -->
+<section class="screen" id="about">
+  <div class="profile-card">
+    <!-- 头像：替换 src 为新图片路径即可换头像 -->
+    <img src="th.jpg" alt="头像" class="avatar">
+
+    <!-- 昵称 -->
+    <h1 class="nickname">小文</h1>
+
+    <!-- 一句话介绍 -->
+    <p class="intro">在路上，慢慢长大。</p>
+
+    <!-- 兴趣爱好 -->
+    <div class="info-block">
+      <h3>兴趣爱好</h3>
+      <p>摄影 · 旅行 · 阅读 · 写字</p>
+    </div>
+
+    <!-- 学习目标 -->
+    <div class="info-block">
+      <h3>学习目标</h3>
+      <p>掌握前端开发，做出属于自己的小宇宙。</p>
+    </div>
+  </div>
+  <div class="scroll-hint">向下滑动 ↓</div>
+</section>
+
+<!-- ========================================
+     第二屏：我的学习记录
+     记录由 JS 动态渲染，数据保存在浏览器本地（localStorage）
+     支持直接点击编辑日期/标题/描述，自动保存
+     ======================================== -->
+<section class="screen timeline-section" id="learning">
+  <div class="timeline-header">
+    <h2>我的学习记录</h2>
+    <p>每一步，都算数</p>
+  </div>
+
+  <!-- 时间线容器，JS 会往里填记录 -->
+  <div class="timeline" id="timeline"></div>
+
+  <!-- 新增记录按钮 -->
+  <button class="btn-add" id="btnAdd">+ 新增记录</button>
+
+  <!-- 操作提示 -->
+  <p class="edit-hint">点击日期、标题或描述可直接编辑 · 鼠标移到卡片上可删除 · 内容自动保存</p>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'wz1_learning_records';
+
+  var timelineEl = document.getElementById('timeline');
+  var btnAdd = document.getElementById('btnAdd');
+
+  // 首次访问时的默认两条记录
+  var defaultRecords = [
+    {
+      date: '2026.03.29',
+      title: '第一个网页：Hello World',
+      desc: '写下了人生第一行 HTML，让"Hello World"出现在浏览器里，打开了新世界的大门。'
+    },
+    {
+      date: '2026.03.29',
+      title: '第一个个人网页：我的个人主页',
+      desc: '用 HTML 和 CSS 做出了属于自己的个人主页，有头像、有介绍、有时间线，这是我的小小作品。'
+    }
+  ];
+
+  /* ---------- 数据读写 ---------- */
+  function loadRecords() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) { /* 忽略 */ }
+    return defaultRecords.slice();
+  }
+
+  function saveRecords(records) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (e) { /* 忽略 */ }
+  }
+
+  var records = loadRecords();
+  // 首次保存，把默认数据写入本地
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    saveRecords(records);
+  }
+
+  /* ---------- 工具函数 ---------- */
+  // 转义 HTML，防止用户输入的 < > 等被当成标签
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = (str == null ? '' : String(str));
+    return div.innerHTML;
+  }
+
+  /* ---------- 渲染单条记录 ---------- */
+  function renderItem(record, index, isNew) {
+    var item = document.createElement('div');
+    item.className = 'timeline-item' + (isNew ? ' is-new' : '');
+    item.innerHTML =
+      '<button class="btn-delete" data-index="' + index + '" title="删除这条记录" aria-label="删除">×</button>' +
+      '<div class="timeline-content">' +
+        '<div class="timeline-date" contenteditable="true" data-field="date" data-placeholder="日期">' + escapeHtml(record.date) + '</div>' +
+        '<h3 class="timeline-title" contenteditable="true" data-field="title" data-placeholder="在这里写标题…">' + escapeHtml(record.title) + '</h3>' +
+        '<p class="timeline-desc" contenteditable="true" data-field="desc" data-placeholder="在这里写描述…">' + escapeHtml(record.desc) + '</p>' +
+      '</div>';
+    return item;
+  }
+
+  /* ---------- 渲染全部记录 ---------- */
+  function render(newIndex) {
+    timelineEl.innerHTML = '';
+    records.forEach(function (r, i) {
+      timelineEl.appendChild(renderItem(r, i, i === newIndex));
+    });
+  }
+
+  /* ---------- 编辑：实时保存 ---------- */
+  timelineEl.addEventListener('input', function (e) {
+    var target = e.target;
+    if (!target.hasAttribute || !target.hasAttribute('contenteditable')) return;
+
+    var item = target.closest('.timeline-item');
+    if (!item) return;
+
+    var btn = item.querySelector('.btn-delete');
+    if (!btn) return;
+
+    var index = parseInt(btn.getAttribute('data-index'), 10);
+    if (isNaN(index) || !records[index]) return;
+
+    var field = target.getAttribute('data-field');
+    records[index][field] = target.innerText;
+    saveRecords(records);
+  });
+
+  /* ---------- 按 Enter 在描述里换行，在日期/标题里不换行 ---------- */
+  timelineEl.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    var target = e.target;
+    if (!target.hasAttribute || !target.hasAttribute('contenteditable')) return;
+    var field = target.getAttribute('data-field');
+    // 日期和标题：回车不换行，跳到下一个字段
+    if (field === 'date' || field === 'title') {
+      e.preventDefault();
+      var item = target.closest('.timeline-item');
+      if (!item) return;
+      var next = item.querySelector('[data-field="desc"]');
+      if (next) { next.focus(); placeCursorEnd(next); }
+    }
+  });
+
+  function placeCursorEnd(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  /* ---------- 删除记录 ---------- */
+  timelineEl.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.btn-delete') : null;
+    if (!btn) return;
+    var index = parseInt(btn.getAttribute('data-index'), 10);
+    if (isNaN(index) || !records[index]) return;
+    if (!confirm('确定删除这条学习记录吗？')) return;
+    records.splice(index, 1);
+    saveRecords(records);
+    render();
+  });
+
+  /* ---------- 新增记录 ---------- */
+  btnAdd.addEventListener('click', function () {
+    records.push({ date: '', title: '', desc: '' });
+    saveRecords(records);
+    var newIndex = records.length - 1;
+    render(newIndex);
+    // 滚动到新记录并聚焦标题
+    var lastItem = timelineEl.lastElementChild;
+    if (lastItem) {
+      lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var title = lastItem.querySelector('[data-field="title"]');
+      if (title) setTimeout(function () { title.focus(); }, 350);
+    }
+  });
+
+  /* ---------- 首次渲染 ---------- */
+  render();
+})();
+</script>
+
+</body>
+</html>
